@@ -24,6 +24,7 @@
 package net.sourceforge.plantuml.servlet;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import javax.imageio.IIOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -31,7 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.plantuml.FileFormat;
-import net.sourceforge.plantuml.servlet.utility.UmlExtractor;
 
 /**
  * Common service servlet to produce diagram from compressed UML source contained in the end part of the requested URI.
@@ -43,7 +43,7 @@ public abstract class UmlDiagramService extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         // build the UML source from the compressed request parameter
-        String uml = UmlExtractor.getUmlSource(getSource(request.getRequestURI()));
+        String uml = URLDecoder.decode(request.getQueryString(), "UTF-8").replaceAll(";", "\n");
 
         // generate the response
         DiagramResponse dr = new DiagramResponse(response, getOutputFormat());
